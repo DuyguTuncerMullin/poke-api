@@ -1,5 +1,5 @@
-import mongoose, { Mongoose } from 'mongoose';
-import dotenv from 'dotenv';
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -8,19 +8,17 @@ const apiConfig = {
   password: process.env.USER_PASSWORD,
 };
 
-const uri = `mongodb+srv://${apiConfig.userName}:${apiConfig.password}@cluster4.xft79te.mongodb.net`;
+const uri = `mongodb+srv://${apiConfig.userName}:${apiConfig.password}@cluster4.xft79te.mongodb.net/sample_analytics`;
 
-const connectToMongoDB = async (): Promise<Mongoose> => {
+const connectToMongoDB = async () => {
   try {
-    const mongooseInstance = await mongoose.connect(uri, {
-    });
+    const connection = await mongoose.connect(uri);
 
-    console.log('Connected to MongoDB with Mongoose');
-
-    return mongooseInstance;
-  } catch (err) {
-    console.error('Error connecting to MongoDB Atlas with Mongoose:', err);
-    throw err;
+    console.log(`Connected to MongoDB: ${connection.connection.host}`);
+    return connection;
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+    throw error;
   }
 };
 

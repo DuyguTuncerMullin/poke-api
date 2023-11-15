@@ -1,15 +1,15 @@
 import axios from "axios";
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-import { Db } from "mongodb";
+import mongoose from "mongoose";
 
 import connectToMongoDB from "./config/db";
+import CustomerModel from "./models/customerModel";
 
 const app = express();
 const port = process.env.PORT || 4000;
-const router = express.Router();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -18,10 +18,18 @@ dotenv.config();
 
 const startServer = async () => {
   try {
-    const mongooseInstance = await connectToMongoDB();
+    // Connect to MongoDB
+    await connectToMongoDB();
 
-    app.get("/", (req, res) => {
-      res.send("Hellow Mongoose");
+    app.get("/customers", async (req: Request, res: Response) => {
+      try {
+        const customers = await CustomerModel.find({});
+        console.log("customers", customers);
+        res.json(customers);
+      } catch (error) {
+        console.error("Error reading customers:", error);
+        res.status(500).send("Internal Server Error");
+      }
     });
 
     app.listen(port, () => {

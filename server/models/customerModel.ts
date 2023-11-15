@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document } from "mongoose";
 
 interface ICustomer extends Document {
   username: string;
@@ -12,6 +12,6 @@ const customerSchema = new Schema<ICustomer>({
   email: { type: String, required: true, unique: true },
 });
 
-const CustomerModel = mongoose.model<ICustomer>('Customer', customerSchema);
+const CustomerModel = mongoose.model<ICustomer>("Customer", customerSchema);
 
 export default CustomerModel;
