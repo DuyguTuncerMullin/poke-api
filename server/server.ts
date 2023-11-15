@@ -3,7 +3,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
+import customerRoutes from "./routes/customerRoutes";
 
 import connectToMongoDB from "./config/db";
 import CustomerModel from "./models/customerModel";
@@ -18,19 +18,8 @@ dotenv.config();
 
 const startServer = async () => {
   try {
-    // Connect to MongoDB
     await connectToMongoDB();
-
-    app.get("/customers", async (req: Request, res: Response) => {
-      try {
-        const customers = await CustomerModel.find({});
-        console.log("customers", customers);
-        res.json(customers);
-      } catch (error) {
-        console.error("Error reading customers:", error);
-        res.status(500).send("Internal Server Error");
-      }
-    });
+    app.use("/api", customerRoutes);
 
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
