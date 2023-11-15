@@ -9,6 +9,7 @@ import connectToMongoDB from "./config/db";
 
 const app = express();
 const port = process.env.PORT || 4000;
+const router = express.Router();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -17,10 +18,10 @@ dotenv.config();
 
 const startServer = async () => {
   try {
-    const db: Db = await connectToMongoDB();
+    const mongooseInstance = await connectToMongoDB();
 
     app.get("/", (req, res) => {
-      res.send("Hellow Mongo");
+      res.send("Hellow Mongoose");
     });
 
     app.listen(port, () => {

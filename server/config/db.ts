@@ -1,6 +1,5 @@
-// server/config/db.ts
-import dotenv from "dotenv";
-import { MongoClient, Db } from "mongodb";
+import mongoose, { Mongoose } from 'mongoose';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -9,17 +8,18 @@ const apiConfig = {
   password: process.env.USER_PASSWORD,
 };
 
-const uri = `mongodb+srv://${apiConfig.userName}:${apiConfig.password}@cluster4.xft79te.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${apiConfig.userName}:${apiConfig.password}@cluster4.xft79te.mongodb.net`;
 
-const connectToMongoDB = async (): Promise<Db> => {
+const connectToMongoDB = async (): Promise<Mongoose> => {
   try {
-    const client = await MongoClient.connect(uri);
-    const db = client.db();
-    console.log('Connected to MongoDB');
+    const mongooseInstance = await mongoose.connect(uri, {
+    });
 
-    return db;
+    console.log('Connected to MongoDB with Mongoose');
+
+    return mongooseInstance;
   } catch (err) {
-    console.error("Error connecting to MongoDB Atlas:", err);
+    console.error('Error connecting to MongoDB Atlas with Mongoose:', err);
     throw err;
   }
 };
