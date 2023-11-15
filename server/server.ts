@@ -1,4 +1,3 @@
-import axios from "axios";
 import express, { Request, Response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -6,7 +5,6 @@ import dotenv from "dotenv";
 import customerRoutes from "./routes/customerRoutes";
 
 import connectToMongoDB from "./config/db";
-import CustomerModel from "./models/customerModel";
 
 const app = express();
 const port = process.env.PORT || 4000;
