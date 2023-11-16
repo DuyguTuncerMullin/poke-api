@@ -1,7 +1,6 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import dotenv from "dotenv";
 import customerRoutes from "./routes/customerRoutes";
 
 import connectToMongoDB from "./config/db";
@@ -12,7 +11,6 @@ const port = process.env.PORT || 4000;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-dotenv.config();
 
 const startServer = async () => {
   try {
