@@ -4,19 +4,10 @@ import axios from "axios";
 import CustomerData from "../interfaces/CustomerData";
 
 const Customers: React.FC = () => {
-  const [data, setData] = useState<CustomerData[]>([]);
   const [name, setName] = useState("");
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
-
-  useEffect(() => {
-    const getDataFromServer = async () => {
-      const { data } = await axios.get(`http://localhost:4000/api/customers`);
-      console.log("data", data);
-      setData(data);
-    };
-    getDataFromServer();
-  }, []);
+  const [newUser, setNewUser] = useState<CustomerData[]>([]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,16 +28,28 @@ const Customers: React.FC = () => {
         username,
         email,
       });
-      console.log("response", data);
-      console.log("Data submitted successfully!");
+      console.log("data in handleSubmit", data);
+      setNewUser(data);
     } catch (error) {
       console.error("Error submitting data:", error);
+    }
+  };
+
+  const deleteHandler = async (id: string) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/customers/${id}`);
+      console.log("id of the customer to be deleted", id);
+  
+      setNewUser((prevUsers) => prevUsers.filter((customer) => customer._id !== id));
+    } catch (error) {
+      console.error("Error deleting customer:", error);
     }
   };
 
   return (
     <div>
       <div>
+        <h1>User Info</h1>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -71,6 +74,22 @@ const Customers: React.FC = () => {
           />
           <button type="submit">Add Your Info</button>
         </form>
+        <section>
+          {newUser.map(({ _id, name, username, email }) => (
+            <div key={_id}>
+              <p>
+                {name}, {username}, {email}
+              </p>
+              <button
+                onClick={() => {
+                  deleteHandler(_id);
+                }}
+              >
+                Delete your information
+              </button>
+            </div>
+          ))}
+        </section>
       </div>
     </div>
   );
