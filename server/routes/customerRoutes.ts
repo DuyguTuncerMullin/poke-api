@@ -48,4 +48,31 @@ router.delete("/customers/:id", async (req: Request, res: Response) => {
   }
 });
 
+router.put("/customers/:id", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const { updateName, updateUserName, updateEmail } = req.body;
+  console.log("id in put", id);
+  try {
+    const updatedCustomer = await CustomerModel.findByIdAndUpdate(
+      id,
+      {
+        name: updateName,
+        username: updateUserName,
+        email: updateEmail,
+      },
+      { new: true }
+    );
+    console.log("updatedCustomer", updatedCustomer);
+
+    if (!updatedCustomer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    res.send(updatedCustomer);
+  } catch (error) {
+    console.error("Error updating customer:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 export default router;
