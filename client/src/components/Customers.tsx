@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import CustomerData from "../interfaces/CustomerData";
+import CustomerUpdate from "./CustomerUpdate";
 
 const Customers: React.FC = () => {
   const [name, setName] = useState("");
@@ -39,8 +40,10 @@ const Customers: React.FC = () => {
     try {
       await axios.delete(`http://localhost:4000/api/customers/${id}`);
       console.log("id of the customer to be deleted", id);
-  
-      setNewUser((prevUsers) => prevUsers.filter((customer) => customer._id !== id));
+
+      setNewUser((prevUsers) =>
+        prevUsers.filter((customer) => customer._id !== id)
+      );
     } catch (error) {
       console.error("Error deleting customer:", error);
     }
@@ -87,6 +90,7 @@ const Customers: React.FC = () => {
               >
                 Delete your information
               </button>
+              <CustomerUpdate _id={_id} name={name} username={username} email={email} />
             </div>
           ))}
         </section>
