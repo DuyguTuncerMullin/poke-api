@@ -3,96 +3,80 @@ import axios from "axios";
 
 import CustomerData from "../interfaces/CustomerData";
 import CustomerUpdate from "./CustomerUpdate";
+import CustomerDelete from "./CustomerDelete";
 
 const Customers: React.FC = () => {
   const [name, setName] = useState("");
-  const [username, setUserName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [newUser, setNewUser] = useState<CustomerData[]>([]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const inputFileldHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (name === "name") {
       setName(value);
-    } else if (name === "userName") {
-      setUserName(value);
+    } else if (name === "username") {
+      setUsername(value);
     } else if (name === "email") {
       setEmail(value);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const { data } = await axios.post("http://localhost:4000/api/customers", {
-        name,
-        username,
-        email,
-      });
-      console.log("data in handleSubmit", data);
-      setNewUser(data);
-    } catch (error) {
-      console.error("Error submitting data:", error);
-    }
+    const { data } = await axios.post(`http://localhost:4000/api/customers`, {
+      name,
+      username,
+      email,
+    });
+    setNewUser(data);
   };
 
-  const deleteHandler = async (id: string) => {
-    try {
-      await axios.delete(`http://localhost:4000/api/customers/${id}`);
-      console.log("id of the customer to be deleted", id);
-
-      setNewUser((prevUsers) =>
-        prevUsers.filter((customer) => customer._id !== id)
-      );
-    } catch (error) {
-      console.error("Error deleting customer:", error);
-    }
+  const deleteHandler = (deletedUserId: string) => {
+    setNewUser((prevUsers) => prevUsers.filter((c) => c._id !== deletedUserId));
   };
 
   return (
     <div>
       <div>
-        <h1>User Info</h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={submitHandler}>
+          <h1>User Info</h1>
           <input
             type="text"
             name="name"
             placeholder="name"
             value={name}
-            onChange={handleInputChange}
-          />
+            onChange={inputFileldHandler}
+          ></input>
           <input
             type="text"
-            name="userName"
-            placeholder="user name"
+            name="username"
+            placeholder="username"
             value={username}
-            onChange={handleInputChange}
-          />
+            onChange={inputFileldHandler}
+          ></input>
           <input
             type="text"
             name="email"
-            placeholder="email address"
+            placeholder="email"
             value={email}
-            onChange={handleInputChange}
-          />
-          <button type="submit">Add Your Info</button>
+            onChange={inputFileldHandler}
+          ></input>
+          <button type="submit">Submit</button>
         </form>
         <section>
-          {newUser.map(({ _id, name, username, email }) => (
-            <div key={_id}>
-              <p>
-                {name}, {username}, {email}
-              </p>
-              <button
-                onClick={() => {
-                  deleteHandler(_id);
-                }}
-              >
-                Delete your information
-              </button>
-              <CustomerUpdate _id={_id} name={name} username={username} email={email} />
-            </div>
-          ))}
+          <div>
+            {newUser.map(({ _id, name, username, email }) => (
+              <div key={_id}>
+                <h1>New User</h1>
+                <li>
+                  {name}, {username}, {email}
+                </li>
+                <CustomerDelete _id={_id} onDelete={() => deleteHandler(_id)} />
+                <CustomerUpdate _id={_id} />
+              </div>
+            ))}
+          </div>
         </section>
       </div>
     </div>

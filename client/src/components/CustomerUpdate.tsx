@@ -1,70 +1,67 @@
 import React, { useState } from "react";
 import axios from "axios";
+interface UpdateProps {
+  _id: string;
+}
 
-import CustomerData from "../interfaces/CustomerData";
+const CustomerUpdate: React.FC<UpdateProps> = ({ _id }) => {
+  const [updatedName, setUpdatedName] = useState("");
+  const [updatedUsername, setUpdatedUsername] = useState("");
+  const [updatedEmail, setUpdatedEmail] = useState("");
 
-const CustomerUpdate: React.FC<CustomerData> = ({
-  _id,
-  name,
-  username,
-  email,
-}) => {
-  const [updateName, setUpdateName] = useState("");
-  const [updateUserName, setUpdateUserName] = useState("");
-  const [updateEmail, setUpdateEmail] = useState("");
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const inputFileldHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (name === "name") {
-      setUpdateName(value);
-    } else if (name === "userName") {
-      setUpdateUserName(value);
-    } else if (name === "email") {
-      setUpdateEmail(value);
+    if (name === "updatedName") {
+      setUpdatedName(value);
+    } else if (name === "updatedUsername") {
+      setUpdatedUsername(value);
+    } else if (name === "updatedEmail") {
+      setUpdatedEmail(value);
     }
   };
 
-  const handleSubmit = async (id: string) => {
+  const submitHandler = async (id: string) => {
     const { data } = await axios.put(
-      `http://localhost:4000/api/customers/${id}`, { updateName, updateUserName, updateEmail });
-    console.log("put request sent");
-    console.log("data in put", data);
+      `http://localhost:4000/api/customers/${id}`,
+      {
+        updatedName,
+        updatedUsername,
+        updatedEmail,
+      }
+    );
   };
 
   return (
     <div>
-      <div>
-        <div>
-          <form
-            onSubmit={() => {
-              handleSubmit(_id);
-            }}
-          >
-            <input
-              type="text"
-              name="name"
-              placeholder="name"
-              value={updateName}
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="userName"
-              placeholder="user name"
-              value={updateUserName}
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="email"
-              placeholder="email address"
-              value={updateEmail}
-              onChange={handleInputChange}
-            />
-            <button type="submit">Update</button>
-          </form>
-        </div>
-      </div>
+      <form
+        onSubmit={() => {
+          submitHandler(_id);
+        }}
+      >
+        <h1>Update your Info</h1>
+        <input
+          type="text"
+          name="updatedName"
+          placeholder="name"
+          value={updatedName}
+          onChange={inputFileldHandler}
+        ></input>
+        <input
+          type="text"
+          name="updatedUsername"
+          placeholder="username"
+          value={updatedUsername}
+          onChange={inputFileldHandler}
+        ></input>
+        <input
+          type="text"
+          name="updatedEmail"
+          placeholder="email"
+          value={updatedEmail}
+          onChange={inputFileldHandler}
+        ></input>
+        <button type="submit">Submit</button>
+      </form>
     </div>
   );
 };
