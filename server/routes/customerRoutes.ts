@@ -15,15 +15,9 @@ router.get("/customers", async (req: Request, res: Response) => {
 router.post("/customers", async (req: Request, res: Response) => {
   try {
     const { username, name, email } = req.body;
-    console.log("req.body", req.body);
-
     const newCustomer: ICustomer = new CustomerModel({ username, name, email });
-    console.log("newCustomer", newCustomer);
-
     await newCustomer.save();
-
     const customerArray = [newCustomer];
-    console.log("customerArray", customerArray);
     res.send(customerArray);
   } catch (error) {
     console.error("Error creating customer:", error);
@@ -33,8 +27,6 @@ router.post("/customers", async (req: Request, res: Response) => {
 
 router.delete("/customers/:id", async (req: Request, res: Response) => {
   const customerId = req.params.id;
-  console.log("customerId", customerId);
-
   try {
     const deletedCustomer = await CustomerModel.findByIdAndDelete(customerId);
 
@@ -50,19 +42,18 @@ router.delete("/customers/:id", async (req: Request, res: Response) => {
 
 router.put("/customers/:id", async (req: Request, res: Response) => {
   const id = req.params.id;
-  const { updateName, updateUserName, updateEmail } = req.body;
-  console.log("id in put", id);
+  const { updatedName, updatedUsername, updatedEmail } = req.body;
+
   try {
     const updatedCustomer = await CustomerModel.findByIdAndUpdate(
       id,
       {
-        name: updateName,
-        username: updateUserName,
-        email: updateEmail,
+        name: updatedName,
+        username: updatedUsername,
+        email: updatedEmail,
       },
       { new: true }
     );
-    console.log("updatedCustomer", updatedCustomer);
 
     if (!updatedCustomer) {
       return res.status(404).json({ message: "Customer not found" });
