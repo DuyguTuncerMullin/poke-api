@@ -32,9 +32,9 @@ const Customers: React.FC = () => {
     setNewUser(data);
   };
 
-  const deleteHandler = (deletedUserId: string) => {
-    setNewUser((prevUsers) => prevUsers.filter((c) => c._id !== deletedUserId));
-  };
+  // const deleteHandler = (deletedUserId: string) => {
+  //   setNewUser((prevUsers) => prevUsers.filter((c) => c._id !== deletedUserId));
+  // };
 
   return (
     <div>
@@ -72,7 +72,12 @@ const Customers: React.FC = () => {
                 <li>
                   {name}, {username}, {email}
                 </li>
-                <CustomerDelete _id={_id} onDelete={() => deleteHandler(_id)} />
+                <CustomerDelete
+                  _id={_id}
+                  // onDelete={() => deleteHandler(_id)}
+                  newUser={newUser}
+                  setNewUser={setNewUser}
+                />
                 <CustomerUpdate _id={_id} />
               </div>
             ))}
